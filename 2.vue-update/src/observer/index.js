@@ -29,9 +29,7 @@ class Observer {
     }
     observeArray(data){ // 对我们数组的数组 和 数组中的对象再次劫持 递归了
         // [{a:1},{b:2}]
-
-
-        // 如果数组里放的是对象类型，也做了观测，JSON.stringify() 也做了收集一来了
+        // 如果数组里放的是对象类型，也做了观测
         data.forEach(item=>observe(item))
     }
     walk(data) { // 对象
@@ -59,16 +57,14 @@ function defineReactive(data,key,value){ // value有可能是对象
     let dep = new Dep(); // 每个属性都有一个dep属性
 
    // 获取到了数组对应ob
-
     Object.defineProperty(data,key,{
         get(){
             // 取值时我希望将watcher和dep 对应起来
-            if(Dep.target){ // 此值是在模板中取值的
-                dep.depend() // 让dep记住watcher
+            if(Dep.target){ // 此值是在模板中取值的也就是有组件使用了这个属性，而不是用户通过vm.xxx直接取值的（用户直接的取值操作不用进行依赖收集）
+                dep.depend() // 让dep记住watcher，依赖收集
                 if(childOb){ // 可能是数组 可能是对象，对象也要收集依赖，后续写$set方法时需要触发他自己的更新操作
                     childOb.dep.depend(); // 就是让数组和对象也记录watcher
-
-                    if(Array.isArray(value)){ //取外层数组要将数组里面的也进行依赖收集
+                    if(Array.isArray(value)){ //如果是数组嵌套数组，那么里面的数组也要进行依赖收集记录watcher，否则里面数组的值变了视图不会更新。取外层数组要将数组里面的也进行依赖收集
                         dependArray(value);
                     }
 
@@ -78,7 +74,6 @@ function defineReactive(data,key,value){ // value有可能是对象
         },
         set(newV){ 
             // todo... 更新视图
-
             if(newV !== value){
                 observe(newV); // 如果用户赋值一个新对象 ，需要将这个对象进行劫持
                 value = newV;

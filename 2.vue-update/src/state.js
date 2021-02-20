@@ -29,8 +29,6 @@ function initData(vm) { //
     // vue2中会将data中的所有数据 进行数据劫持 Object.defineProperty
 
     // 这个时候 vm 和 data没有任何关系, 通过_data 进行关联
-
-
     data = vm._data = isFunction(data) ? data.call(vm) : data;
 
     // 用户去vm.xxx => vm._data.xxx

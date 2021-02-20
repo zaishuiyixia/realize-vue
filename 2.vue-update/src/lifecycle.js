@@ -5,9 +5,7 @@ export function lifecycleMixin(Vue) {
     Vue.prototype._update = function(vnode) {
         // 既有初始化 又又更新 
         const vm = this;
-
         vm.$el = patch(vm.$el, vnode);
-
     }
     Vue.prototype.$nextTick = nextTick
 }
@@ -23,7 +21,7 @@ export function mountComponent(vm, el) {
 
     // 观察者模式： 属性是“被观察者”  刷新页面：“观察者”
     // updateComponent();
-    new Watcher(vm,updateComponent,()=>{
+    new Watcher(vm, updateComponent, ()=>{
         console.log('更新视图了')
-    },true); // 他是一个渲染watcher  后续有其他的watcher
+    }, true); // 参数true，标识它是一个渲染watcher  后续有其他的watcher
 }

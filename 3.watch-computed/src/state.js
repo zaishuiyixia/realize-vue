@@ -6,7 +6,7 @@ import { isFunction } from "./utils";
 
 export function stateMixin(Vue) {
     Vue.prototype.$watch = function(key, handler, options = {}) {
-        options.user = true; // 是一个用户自己写的watcher
+        options.user = true; // 是一个用户自己写的watcher，和渲染watcher区分开
 
         // vm,name,用户回调，options.user
         new Watcher(this, key, handler, options);
@@ -73,17 +73,16 @@ function createWatcher(vm, key, handler) {
 }
 
 function initComputed(vm, computed) {
-
     const watchers = vm._computedWatchers = {}
     for (let key in computed) {
         // 校验 
-        const userDef = computed[key];
+        const userDef = computed[key]; //可能是函数可能是对象
         // 依赖的属性变化就重新取值 get
         let getter = typeof userDef == 'function' ? userDef : userDef.get;
 
         // 每个就算属性本质就是watcher   
         // 将watcher和 属性 做一个映射
-        watchers[key] = new Watcher(vm, getter, () => {}, { lazy: true }); // 默认不执行
+        watchers[key] = new Watcher(vm, getter, () => {}, { lazy: true }); // lazy: true 默认不执行
 
         // 将key 定义在vm上
         defineComputed(vm, key, userDef);
@@ -91,7 +90,6 @@ function initComputed(vm, computed) {
 }
 
 function createComputedGetter(key) {
-    
     return function computedGetter() { // 取计算属性的值 走的是这个函数
         // this._computedWatchers 包含着所有的计算属性
         // 通过key 可以拿到对应watcher，这个watcher中包含了getter

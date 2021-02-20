@@ -9,7 +9,7 @@ class Watcher {
         // exporOfFn
         this.vm = vm;
         this.exprOrFn = exprOrFn;
-        this.user = !!options.user; // 是不是用户watcher
+        this.user = !!options.user; // 用来区分是用户自己传入的watcher还是其他watcher
         this.lazy = !!options.lazy;
         this.dirty = options.lazy; // 如果是计算属性，那么默认值lazy:true, dirty:true
         this.cb = cb;
@@ -35,7 +35,7 @@ class Watcher {
         this.deps = [];
         this.depsId = new Set();
         // 第一次的value
-        this.value = this.lazy ? undefined : this.get(); // 默认初始化 要取值
+        this.value = this.lazy ? undefined : this.get(); // 默认初始化 要取值，计算属性默认不执行，只有在取值的时候执行
 
     }
     get() { // 稍后用户更新 时 可以重新调用getter方法

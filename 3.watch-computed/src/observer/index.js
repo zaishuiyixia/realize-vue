@@ -62,7 +62,6 @@ function defineReactive(data,key,value){ // value有可能是对象
 
     Object.defineProperty(data,key,{
         get(){
-            console.log(dep,key);
             // 取值时我希望将watcher和dep 对应起来
             if(Dep.target){ // 此值是在模板中取值的
                 dep.depend() // 让dep记住watcher

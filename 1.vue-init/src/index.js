@@ -4,13 +4,13 @@ import { renderMixin } from "./render";
 
 function Vue(options){
     // options 为用户传入的选项
-    this._init(options); // 初始化操作， 组件
+    this._init(options); // 初始化操作
 }
 
-// 扩展原型的
+// 扩展Vue原型上的方法
 initMixin(Vue);
-renderMixin(Vue); // _render
-lifecycleMixin(Vue); // _update
+renderMixin(Vue); // vm._render
+lifecycleMixin(Vue); // vm._update
 export default Vue;
 
 

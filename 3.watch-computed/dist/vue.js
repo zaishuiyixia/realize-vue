@@ -325,7 +325,6 @@
     function pushTarget(watcher) {
       Dep.target = watcher;
       stack$1.push(watcher);
-      console.log(stack$1);
     }
     function popTarget() {
       stack$1.pop();
@@ -432,7 +431,7 @@
         // exporOfFn
         this.vm = vm;
         this.exprOrFn = exprOrFn;
-        this.user = !!options.user; // 是不是用户watcher
+        this.user = !!options.user; // 用来区分是用户自己传入的watcher还是其他watcher
 
         this.lazy = !!options.lazy;
         this.dirty = options.lazy; // 如果是计算属性，那么默认值lazy:true, dirty:true
@@ -463,7 +462,7 @@
         this.deps = [];
         this.depsId = new Set(); // 第一次的value
 
-        this.value = this.lazy ? undefined : this.get(); // 默认初始化 要取值
+        this.value = this.lazy ? undefined : this.get(); // 默认初始化 要取值，计算属性默认不执行，只有在取值的时候执行
       }
 
       _createClass(Watcher, [{
@@ -711,8 +710,7 @@
 
       Object.defineProperty(data, key, {
         get: function get() {
-          console.log(dep, key); // 取值时我希望将watcher和dep 对应起来
-
+          // 取值时我希望将watcher和dep 对应起来
           if (Dep.target) {
             // 此值是在模板中取值的
             dep.depend(); // 让dep记住watcher
@@ -759,7 +757,7 @@
     function stateMixin(Vue) {
       Vue.prototype.$watch = function (key, handler) {
         var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-        options.user = true; // 是一个用户自己写的watcher
+        options.user = true; // 是一个用户自己写的watcher，和渲染watcher区分开
         // vm,name,用户回调，options.user
 
         new Watcher(this, key, handler, options);
@@ -834,14 +832,15 @@
 
       for (var key in computed) {
         // 校验 
-        var userDef = computed[key]; // 依赖的属性变化就重新取值 get
+        var userDef = computed[key]; //可能是函数可能是对象
+        // 依赖的属性变化就重新取值 get
 
         var getter = typeof userDef == 'function' ? userDef : userDef.get; // 每个就算属性本质就是watcher   
         // 将watcher和 属性 做一个映射
 
         watchers[key] = new Watcher(vm, getter, function () {}, {
           lazy: true
-        }); // 默认不执行
+        }); // lazy: true 默认不执行
         // 将key 定义在vm上
 
         defineComputed(vm, key, userDef);

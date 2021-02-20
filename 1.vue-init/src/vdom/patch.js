@@ -4,7 +4,6 @@ export function patch(oldVnode, vnode) {
         const parentElm = oldVnode.parentNode; // 找到他的父亲
         let elm = createElm(vnode); //根据虚拟节点 创建元素
         parentElm.insertBefore(elm, oldVnode.nextSibling);
-
         parentElm.removeChild(oldVnode);
     }
 }

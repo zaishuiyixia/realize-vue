@@ -3,6 +3,5 @@ export function isFunction(val) {
 }
 
 export function isObject(val) {
-    return typeof val == 'object' && val !== null
-
+    return typeof val === 'object' && val !== null
 }

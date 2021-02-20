@@ -38,7 +38,7 @@
                     }
                 }
             },
-            watch: { // 用户watcher
+            watch: { // 用户watcher，watch的三种写法
                 // name(newVal, oldVal) {
                 //     console.log(newVal, oldVal)
                 // },
@@ -57,8 +57,8 @@
         });
 
 
-        console.log(vm.fullName)
-        console.log(vm.fullName)
+        // console.log(vm.fullName)
+        // console.log(vm.fullName)
         setTimeout(() => {
             vm.firstName = 'zs'
 
@@ -66,8 +66,8 @@
 
         }, 1000);
 
-        // 计算属性默认不执行 =》 Object.defineProperty => getter
-        // 多次取值如果依赖的值不变化 就不会重新执行  vm.fullname vm.fullname
+        // 计算属性默认不执行，只有在取值的时候才会执行，其实他就是 Object.defineProperty的 getter
+        // 多次取值如果依赖的值不变化 就不会重新执行  vm.fullname vm.fullname 只会执行一次取值操作
         // 依赖的值变化 需要重新执行 vm.firstame = 'zhang'  fullname zhangfeng
 
         // dirty 表示这个值是不是脏的 true （取值后值变为false）， 依赖的值变化了 dirty=>true

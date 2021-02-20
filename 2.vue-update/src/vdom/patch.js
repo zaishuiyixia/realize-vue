@@ -3,13 +3,10 @@ export function patch(oldVnode, vnode) {
         // 用vnode  来生成真实dom 替换原本的dom元素
         const parentElm = oldVnode.parentNode; // 找到他的父亲
         let elm = createElm(vnode); //根据虚拟节点 创建元素
-
-        // 在第一次渲染后 是删除掉节点，下次在使用无法获取
+        // 在第一次渲染后已经删除掉节点，下次在使用无法获取
         parentElm.insertBefore(elm, oldVnode.nextSibling);
-
         parentElm.removeChild(oldVnode)
-
-
+        //所以要返回新的节点，对vm.$el重新赋值
         return elm
     }
 }

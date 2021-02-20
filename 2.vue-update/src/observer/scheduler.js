@@ -3,10 +3,10 @@ import { nextTick } from "../utils";
 let queue = [];
 let has = {}; // 做列表的 列表维护存放了哪些watcher
 
-// 动画  滚动的频率高，节流 requestFrameAnimation
+// 批处理
 function flushSchedulerQueue(){
     for(let i =0 ; i < queue.length; i++){
-        queue[i].run(); // vm.name = 123?
+        queue[i].run()
     }
     queue = [];
     has = {};
@@ -21,7 +21,7 @@ export function queueWatcher(watcher) { // 当前执行栈中代码执行完毕�
     if (has[id] == null) {
         queue.push(watcher);
         has[id] = true;
-        // 开启一次更新操作  批处理 （防抖）
+        // 开启一次更新操作 => 批处理（防抖）
         if(!pending){
             nextTick(flushSchedulerQueue, 0);
             pending = true;
